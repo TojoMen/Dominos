@@ -1,7 +1,7 @@
 from enum import Enum
 
 #Eviter les erreurs et valeurs non autorisées
-class Pip_enum(Enum):
+class Pip(Enum):
     ZERO  = 0
     ONE   = 1
     TWO   = 2
