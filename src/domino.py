@@ -18,6 +18,10 @@ class Domino:
             return True
         if self.right_end == left and self.right_end == right:
             return True
+        if self.left_end == left and self.right_end == right:
+            return True
+        if self.right_end == left and self.left_end == right:
+            return True
         return False
     
     def is_a_inverser(self, end:Pip, side:Side) -> bool:

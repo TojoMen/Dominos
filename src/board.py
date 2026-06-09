@@ -7,7 +7,7 @@ class Board:
     def __init__(self):
         self.left_end: Pip | None = None
         self.right_end: Pip | None = None
-        self.dom: list[Move] = []
+        self.moves: list[Move] = []
 
     def update(self, domino, side:Side):
         if side == Side.LEFT:
@@ -16,18 +16,18 @@ class Board:
                 domino.inverser()
             else:
                 self.left_end = domino.left_end
-            self.dom.append(Move(0, domino, Side.LEFT, False, False))
+            self.moves.append(Move(0, domino, Side.LEFT, False, False))
         else:
             if domino.left_end == self.right_end:
                 self.right_end = domino.right_end
             else:
                 self.right_end = domino.left_end
                 domino.inverser()
-            self.dom.append(Move(0, domino, Side.RIGHT, False, False))
+            self.moves.append(Move(0, domino, Side.RIGHT, False, False))
 
     def place(self, domino: Domino, side: Side):
-        if len(self.dom) == 0:
-            self.dom.append(Move(0,domino, Side.LEFT, False, False))
+        if len(self.moves) == 0:
+            self.moves.append(Move(0,domino, Side.LEFT, False, False))
             self.left_end = domino.left_end
             self.right_end = domino.right_end
             return
@@ -44,8 +44,8 @@ class Board:
 
     def affichage(self) -> str:
         jeu = ""
-        print("longeur du board = " + str(len(self.dom)))
-        for m in self.dom:
+        print("longeur du board = " + str(len(self.moves)))
+        for m in self.moves:
             if m.side == Side.LEFT :
                 jeu = m.domino.to_string() +" "+ jeu
             else:
