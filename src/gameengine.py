@@ -1,6 +1,7 @@
 import random
 from pip_enum import Pip
 from domino import Domino
+from hand import Hand
 from pioche import Pioche
 from board import Board
 from move import Move
@@ -10,7 +11,7 @@ from gamestate import GameState
 from side import Side
 
 class GameEngine:
-    def start_game(self, players: list) -> GameState:
+    def start_game(self, players: list[Player]) -> GameState:
         dominos = []
         pip_values = list(Pip)
 
@@ -18,13 +19,14 @@ class GameEngine:
             for j in range(i, len(pip_values)):
                 dominos.append(Domino(pip_values[i], pip_values[j]))
         random.shuffle(dominos)
-        
+
         for player in players:
+            player.hand = Hand([])
             for _ in range(7):
                 player.hand.add(dominos.pop())
-        
+
         pioche = Pioche(dominos)
-        
+
         starting_index = 0
         highest_double = -1
         for i, player in enumerate(players):
@@ -32,7 +34,7 @@ class GameEngine:
                 if domino.is_double() and domino.left_end.value > highest_double:
                     highest_double = domino.left_end.value
                     starting_index = i
-        
+
         return GameState(board=Board(), pioche=pioche, players=players, current_player_index=starting_index, status=GameStatus.IN_PROGRESS, consecutive_passes=0)
 
 
@@ -84,3 +86,11 @@ class GameEngine:
         state.current_player_index += 1
         state.current_player_index %= 3 
         return None
+    
+    def calculate_scores(self, state: GameState, winner: Player) -> int:
+        points = 0
+        for player in state.players:
+            if player is not winner:
+                points += player.hand.total()
+        winner.score += points
+        return winner.score 

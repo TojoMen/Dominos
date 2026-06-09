@@ -1,48 +1,59 @@
 from gameengine import GameEngine
 from player import Player
 from gamestatus import GameStatus
-from hand import Hand
 from terminal_ui import TerminalUI
 
+WIN_SCORE = 120
+
+
 def main():
-    """Fonction principale - boucle de jeu"""
+    """Fonction principale - boucle de parties"""
     ui = TerminalUI()
     
-    p1 = Player(id="0", name="Tojo")
-    p2 = Player(id="1", name="Rindra")
-    p3 = Player(id="2", name="Dada")
+    players = [
+        Player(id="0", name="Tojo"),
+        Player(id="1", name="Rindra"),
+        Player(id="2", name="Dada"),
+    ]
 
     engine = GameEngine()
-    state = engine.start_game([p1, p2, p3])
 
-    while state.status == GameStatus.IN_PROGRESS:
-        current_player = state.players[state.current_player_index]
-        moves = engine.get_valid_moves(state)
+    while max(player.score for player in players) <= WIN_SCORE:
+        state = engine.start_game(players)
+        winner = None
 
-        # Affichage avec UI
-        ui.display_board(state.board.affichage())
-        ui.display_player_turn(current_player.name)
-        
-        hand_display = "\n".join(domino.to_string() for domino in current_player.hand.dominos)
-        ui.display_hand(hand_display)
+        while state.status == GameStatus.IN_PROGRESS:
+            current_player = state.players[state.current_player_index]
+            moves = engine.get_valid_moves(state)
 
-        # Traiter les moves
-        if len(moves) == 0:
-            ui.display_no_moves()
-            ui.get_pass_confirmation()  # Gère la validation avec boucle
-            state.consecutive_passes += 1
-            winner = engine.check_win(state)
+            ui.display_board(state.board.affichage())
+            ui.display_player_turn(current_player.name)
+
+            hand_display = "\n".join(domino.to_string() for domino in current_player.hand.dominos)
+            ui.display_hand(hand_display)
+
+            if len(moves) == 0:
+                ui.display_no_moves()
+                ui.get_pass_confirmation()
+                state.consecutive_passes += 1
+                winner = engine.check_win(state)
+            else:
+                moves_display = [move.domino.to_string() for move in moves]
+                ui.display_available_moves(moves_display)
+                choix = ui.get_move_choice(len(moves))
+                state = engine.apply_move(state, moves[choix])
+                winner = engine.check_win(state)
+
+        if winner is not None:
+            engine.calculate_scores(state, winner)
+            ui.display_match_winner(winner.name)
+            ui.display_scores(players, title="Scores cumulatifs :")
         else:
-            # Afficher les moves possibles
-            moves_display = [move.domino.to_string() for move in moves]
-            ui.display_available_moves(moves_display)
+            ui.display_error("Aucune victoire détectée à la fin de la partie")
 
-            # Lire le choix avec validation d'erreur
-            choix = ui.get_move_choice(len(moves))  # Gère la validation avec boucle
-            state = engine.apply_move(state, moves[choix])
-            winner = engine.check_win(state)
-    
-    ui.display_winner(winner.name)
+    overall_winner = max(players, key=lambda player: player.score)
+    ui.display_final_champion(overall_winner.name, overall_winner.score)
+
 
 if __name__ == "__main__":
     main()

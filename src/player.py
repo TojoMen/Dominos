@@ -5,6 +5,7 @@ class Player:
         self.id = id
         self.name = name
         self.hand = Hand([])
-    
+        self.score = 0
+        
     
         
