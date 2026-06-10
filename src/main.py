@@ -44,12 +44,14 @@ def main():
                 state = engine.apply_move(state, moves[choix])
                 winner = engine.check_win(state)
 
+        ui.display_hand_totals(state.players)
+
         if winner is not None:
             engine.calculate_scores(state, winner)
             ui.display_match_winner(winner.name)
             ui.display_scores(players, title="Scores cumulatifs :")
         else:
-            ui.display_error("Aucune victoire détectée à la fin de la partie")
+            ui.display_draw()
 
     overall_winner = max(players, key=lambda player: player.score)
     ui.display_final_champion(overall_winner.name, overall_winner.score)

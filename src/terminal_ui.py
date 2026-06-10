@@ -37,10 +37,10 @@ class TerminalUI:
             bool: True si l'utilisateur confirme (tape PASS)
         """
         while True:
-            choix = input("Écris PASS pour passer ton tour : ").strip().upper()
-            if choix == "PASS":
+            choix = input("appuie sur ENTRER pour passer : ").strip().upper()
+            if choix == "":
                 return True
-            print("❌ Erreur : tapez PASS pour confirmer")
+            print("❌ Erreur : appuie sur ENTRER pour passer")
     
     @staticmethod
     def display_board(board_str: str):
@@ -92,3 +92,16 @@ class TerminalUI:
         print(f"\n📊 {title}")
         for player in players:
             print(f"  {player.name} : {player.score} points")
+
+    @staticmethod
+    def display_hand_totals(players: list):
+        """Affiche les totaux de points des dominos encore en main"""
+        print("\n🧮 Totaux des mains à la fin de la manche :")
+        for player in players:
+            total = player.hand.total()
+            print(f"  {player.name} : {total} points")
+    
+    @staticmethod
+    def display_draw():
+        """Affiche un message de match nul"""
+        print("\n🤝 Match nul ! Aucun gagnant cette manche.")

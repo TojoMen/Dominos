@@ -79,6 +79,22 @@ class GameEngine:
             state.status = state.status.FINISHED
             return state.players[state.current_player_index]
         if state.consecutive_passes  == 3:
+            min_total = 120
+            max_total = -1
+            score_equal = -1
+            count_same_score = 0
+            for player in state.players:
+                player_total = player.hand.total()
+                if player_total == min_total:
+                    count_same_score += 1
+                    score_equal = player_total
+                if player_total < min_total:
+                    min_total = player_total
+                if player_total > max_total:
+                    max_total = player_total
+            if count_same_score > 1 and score_equal == min_total:
+                state.status = state.status.FINISHED
+                return None
             totaux = [player.hand.total() for player in state.players]
             state.status = state.status.FINISHED
             return state.players[totaux.index(min(totaux))] #tohizana eto fa nilalao dota
