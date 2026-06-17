@@ -1,7 +1,7 @@
-from gameengine import GameEngine
-from player import Player
-from gamestatus import GameStatus
-from terminal_ui import TerminalUI
+from src.gameengine import GameEngine
+from src.player import Player
+from src.gamestatus import GameStatus
+from src.terminal_ui import TerminalUI
 
 WIN_SCORE = 120
 

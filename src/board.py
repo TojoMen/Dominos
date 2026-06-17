@@ -1,7 +1,7 @@
-from domino import Domino
-from pip_enum import Pip
-from side import Side
-from move import Move
+from src.domino import Domino
+from src.pip_enum import Pip
+from src.side import Side
+from src.move import Move
 
 class Board:
     def __init__(self):
@@ -32,11 +32,8 @@ class Board:
             self.right_end = domino.right_end
             return
         if side == Side.BOTH:
-            choix = input("choisir un coté :")
-            if choix == "left":
-                self.update(domino, Side.LEFT)
-            else:
-                self.update(domino, Side.RIGHT)
+            # Déterministe pour l'API : choisir la gauche par défaut
+            self.update(domino, Side.LEFT)
         if side == Side.RIGHT and domino.matches(self.right_end):
             self.update(domino, Side.RIGHT)
         elif side == Side.LEFT and domino.matches(self.left_end):

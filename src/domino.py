@@ -1,5 +1,5 @@
-from pip_enum import Pip
-from side import Side
+from src.pip_enum import Pip
+from src.side import Side
 class Domino:
     def __init__(self, left_end: Pip, right_end: Pip):
         self.left_end = left_end

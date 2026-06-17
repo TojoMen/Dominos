@@ -1,14 +1,14 @@
 import random
-from pip_enum import Pip
-from domino import Domino
-from hand import Hand
-from pioche import Pioche
-from board import Board
-from move import Move
-from player import Player
-from gamestatus import GameStatus
-from gamestate import GameState
-from side import Side
+from src.pip_enum import Pip
+from src.domino import Domino
+from src.hand import Hand
+from src.pioche import Pioche
+from src.board import Board
+from src.move import Move
+from src.player import Player
+from src.gamestatus import GameStatus
+from src.gamestate import GameState
+from src.side import Side
 
 class GameEngine:
     def start_game(self, players: list[Player]) -> GameState:

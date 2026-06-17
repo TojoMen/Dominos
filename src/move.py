@@ -1,5 +1,5 @@
-from domino import Domino
-from side import Side
+from src.domino import Domino
+from src.side import Side
 
 class Move:
     def __init__(self, player_id:int, domino: Domino, side: Side, is_pass: bool, is_draw: bool ):

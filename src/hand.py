@@ -1,4 +1,4 @@
-from domino import Domino
+from src.domino import Domino
 
 class Hand:
     def __init__(self, dominos:list[Domino]):
