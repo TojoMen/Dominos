@@ -41,3 +41,9 @@ def test_play_move_invalid_index():
     client.post("/start", json={})
     response = client.post("/move", json={"move_index": 999})
     assert response.status_code == 400
+
+
+def test_start_game_requires_at_least_two_players():
+    response = client.post("/start", json={"player_names": ["Solo"]})
+    assert response.status_code == 400
+    assert response.json()["detail"] == "At least 2 players are required to start a game."

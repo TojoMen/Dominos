@@ -49,6 +49,8 @@ def serialize_state(s: GameState) -> dict:
 def start_game(req: StartRequest):
     global players, state
     names = req.player_names or ["Tojo", "Rindra", "Dada"]
+    if len(names) < 2:
+        raise HTTPException(status_code=400, detail="At least 2 players are required to start a game.")
     players = [Player(id=str(i), name=name) for i, name in enumerate(names)]
     state = engine.start_game(players)
     return serialize_state(state)
