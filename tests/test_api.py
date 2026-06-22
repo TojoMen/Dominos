@@ -5,14 +5,19 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, ROOT)
 
 from fastapi.testclient import TestClient
-from src import api
+from src import api, db
 
 client = TestClient(api.app)
 
 
 def setup_function():
-    api.state = None
-    api.players = []
+    # Clear all global state
+    db.games.clear()
+    db.game_players.clear()
+    db.game_player_tokens.clear()
+    db.game_engines.clear()
+    db.state = None
+    db.players = []
 
 
 def test_start_game_default():
