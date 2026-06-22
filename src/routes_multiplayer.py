@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException
 
 from .models import CreateGameRequest, JoinGameRequest, MoveRequest
 from .side import Side
-from . import db
+from . import db, persistence
 from .serializers import serialize_player, serialize_state
 
 
@@ -139,6 +139,14 @@ def play_move(game_id: str, req: MoveRequest):
     
     state = game_engine.apply_move(state, chosen)
     db.set_game(game_id, state)
+    
+    # Save move to history
+    persistence.save_move_history(
+        game_id=game_id,
+        player_id=req.player_id,
+        move_index=req.move_index,
+        move_data={"domino": chosen.domino.to_string(), "side": chosen.side.value if chosen.side else None}
+    )
     
     winner = game_engine.check_win(state)
     result = {"state": serialize_state(state)}

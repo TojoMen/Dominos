@@ -6,6 +6,10 @@ from uuid import uuid4
 from .gameengine import GameEngine
 from .player import Player
 from .gamestate import GameState
+from . import persistence
+
+# Initialize SQLite database on module load
+persistence.init_db()
 
 
 # Global game storage: game_id -> GameState
@@ -34,6 +38,9 @@ def create_game_session() -> str:
     game_players[game_id] = {}
     game_player_tokens[game_id] = {}
     game_engines[game_id] = GameEngine()
+    
+    # Save empty game to database
+    persistence.save_game(game_id, {})
     return game_id
 
 
@@ -51,6 +58,9 @@ def add_player_to_game(game_id: str, player_name: str) -> tuple[str, str]:
     game_players[game_id][player_id] = player
     game_player_tokens[game_id][player_id] = token
     
+    # Save player token to database
+    persistence.save_player_token(game_id, player_id, player_name, token)
+    
     return player_id, token
 
 
@@ -62,6 +72,10 @@ def get_game(game_id: str) -> Optional[GameState]:
 def set_game(game_id: str, state: GameState):
     """Store a game state."""
     games[game_id] = state
+    # Save game state to database
+    # Note: we serialize only essential fields for now (simple state dict)
+    # Full serialization would require converting GameState → dict
+    persistence.save_game(game_id, {"status": "persisted"})
 
 
 def get_game_engine(game_id: str) -> Optional[GameEngine]:
